@@ -4,8 +4,7 @@ var Webtask    = require('webtask-tools');
 var bodyParser = require('body-parser');
 var cors       = require('cors');
 
-var app = express();
-app.use(cors(function(req, cb) {
+var corsDelegate = function(req, cb) {
   var allowedOrigins = req.webtaskContext.meta.corsAllowedOrigins.split(',');
   console.log('found allowed origins: ', allowedOrigins);
   cb(null, {
@@ -14,11 +13,13 @@ app.use(cors(function(req, cb) {
     allowedHeaders: ['Content-Type'],
     optionsSuccessStatus: 200,
   });
-}));
+};
+
+var app = express();
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
-app.post('/', function (req, res, next) {
+app.post('/', cors(coresDelegate) function (req, res, next) {
   if (req.body.email_address == null) {
     var error = new Error('body must have an email_address field');
     error.status = 400;
