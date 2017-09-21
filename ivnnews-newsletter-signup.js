@@ -1,5 +1,4 @@
 var Mailchimp = require('mailchimp-api-v3');
-var Promise = require('bluebird');
 var parseFormdata_ = require('parse-formdata');
 
 function parseFormdata(req) {
@@ -28,7 +27,7 @@ module.exports = function(context, req, res) {
         status: 'subscribed',
       });    
     }, function(err) {
-      console.log(`parseFormdata error: ${err}`);
+      console.log('parseFormdata error: %o', err);
       return Promise.reject({status: 400, message: err.message || 'unknown error'});
     })
     .then(function(res) {
@@ -36,14 +35,17 @@ module.exports = function(context, req, res) {
       res.writeHead(200);
       res.end();
     }, function(err) {
-      console.log(`mailchimp api call error: ${err}`);
+      console.log('mailchimp api call error: %o', err);
       return Promise.reject({status: err.status || 500, message: err.message});
     })
     .catch(function(error) {
       res.writeHead(error.status, {
         'Content-Type': 'application/json',
       });
-      var json = JSON.stringify(error.message);
+      var json = JSON.stringify({
+        status: error.status,
+        message: error.message,
+      });
       res.end(json);
     });
 };
