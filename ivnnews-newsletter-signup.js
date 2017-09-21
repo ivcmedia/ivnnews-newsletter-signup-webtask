@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 var cors       = require('cors');
 
 var app = express();
+/*
 app.use(cors(function(req, cb) {
   var allowedOrigins = req.webtaskContext.meta.corsAllowedOrigins.split(',');
   console.log('found allowed origins: ', allowedOrigins);
@@ -15,6 +16,7 @@ app.use(cors(function(req, cb) {
     optionsSuccessStatus: 200,
   });
 }));
+*/
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
