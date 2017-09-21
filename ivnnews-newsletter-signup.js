@@ -5,8 +5,8 @@ function parseFormdata(req) {
   return new Promise(function(resolve, reject) {
     parseFormdata_(req, function(err, data) {
       if (err != null) {
-        err.status = 400;
-        return reject(err);
+        console.log('parseFormdata error: %o', err);
+        return reject({status: 400, message: err.message || 'unknown error'});
       }
       return resolve(data);
     });
@@ -25,18 +25,15 @@ module.exports = function(context, req, res) {
       return mailchimp.post(`/lists/${context.meta.mailchimpListId}/members`, {
         email_address: context.body.email_address,
         status: 'subscribed',
+      }).catch(function(err) {
+        console.log('mailchimp api call error: %o', err);
+        return Promise.reject({status: err.status || 500, message: err.message});
       });    
-    }, function(err) {
-      console.log('parseFormdata error: %o', err);
-      return Promise.reject({status: 400, message: err.message || 'unknown error'});
     })
     .then(function(res) {
       console.log('success!');
       res.writeHead(200);
       res.end();
-    }, function(err) {
-      console.log('mailchimp api call error: %o', err);
-      return Promise.reject({status: err.status || 500, message: err.message});
     })
     .catch(function(error) {
       res.writeHead(error.status, {
