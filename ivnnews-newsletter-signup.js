@@ -10,7 +10,7 @@ app.use(cors(function(req, cb) {
   console.log('found allowed origins: ', allowedOrigins);
   cb(null, {
     origin: allowedOrigins,
-    methods: ['POST'],
+    methods: ['OPTIONS', 'POST'],
     allowedHeaders: ['Content-Type'],
     optionsSuccessStatus: 200,
   });
