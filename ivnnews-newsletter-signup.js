@@ -2,8 +2,17 @@ var Mailchimp  = require('mailchimp-api-v3');
 var express    = require('express');
 var Webtask    = require('webtask-tools');
 var bodyParser = require('body-parser');
+var cors       = require('cors');
 
 var app = express();
+app.use(cors(function(req, cb) {
+  cb(null, {
+    origin: req.webtaskContext.meta.corsAllowedOrigins.split(','),
+    methods: ['POST'],
+    allowedHeaders: ['Content-Type'],
+    optionsSuccessStatus: 200,
+  });
+}));
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
