@@ -31,7 +31,7 @@ app.post('/', function (req, res, next) {
     console.error('mailchimp api call error: %o', err);
     return Promise.reject(err);
   })
-  .then(function(res) {
+  .then(function() {
       console.log('success!');
       res.status(200).end();
   })
