@@ -21,7 +21,6 @@ app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.post('/', function (req, res, next) {
-  console.log(res.get('Access-Control-Allow-Origin'));
   if (req.body.email_address == null) {
     var error = new Error('body must have an email_address field');
     error.status = 400;
