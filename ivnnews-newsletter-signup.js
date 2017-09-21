@@ -10,7 +10,7 @@ app.use(cors(function(req, cb) {
   console.log('found allowed origins: ', allowedOrigins);
   cb(null, {
     origin: function(origin, originCb) {
-      if (allowedOrigins.indexOf(origin) >= 0) {
+      if (allowedOrigins.indexOf(origin) !== -1) {
         return originCb(null, true);
       }
       originCb(new Error('Not allowed by CORS'));
