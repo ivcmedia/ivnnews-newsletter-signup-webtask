@@ -19,7 +19,7 @@ var app = express();
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
-app.post('/', cors(coresDelegate), function (req, res, next) {
+app.post('/', cors(corsDelegate), function (req, res, next) {
   if (req.body.email_address == null) {
     var error = new Error('body must have an email_address field');
     error.status = 400;
