@@ -38,7 +38,7 @@ app.use(function(err, req, res, next) {
   console.error(err.stack);
   var status = err.status || 500;
   res.status(status);
-  res.send({status: status, error: err});
+  res.send({status: status, error: err.message});
 });
 
 module.exports = Webtask.fromExpress(app);
