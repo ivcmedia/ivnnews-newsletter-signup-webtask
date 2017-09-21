@@ -8,17 +8,19 @@ app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.post('/', function (req, res, next) {
-  console.log(req.body);
   if (req.body.email_address == null) {
     var error = new Error('body must have an email_address field');
     error.status = 400;
     return next(error);
   }
-  var mailchimp = new Mailchimp(context.secrets.mailchimpApiKey);
-  var path = `/lists/${context.meta.mailchimpListId}/members`;
+  var emailAddress = req.body.email_address;
+  var secrets = req.webtaskContext.secrets;
+  var meta = req.webtaskContext.meta;
+  var mailchimp = new Mailchimp(secrets.mailchimpApiKey);
+  var path = `/lists/${meta.mailchimpListId}/members`;
   console.info(`making POST request to ${path}`);
-  return mailchimp.post(`/lists/${context.meta.mailchimpListId}/members`, {
-    email_address: context.body.email_address,
+  return mailchimp.post(`/lists/${meta.mailchimpListId}/members`, {
+    email_address: email_address,
     status: 'subscribed',
   }).catch(function(err) {
     console.error('mailchimp api call error: %o', err);
