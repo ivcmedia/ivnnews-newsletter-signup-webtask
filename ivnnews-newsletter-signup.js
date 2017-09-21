@@ -9,7 +9,7 @@ app.use(cors(function(req, cb) {
   var allowedOrigins = (req.webtaskContext.meta.corsAllowedOrigins || '*').split(',');
   console.log('found allowed origins: ', allowedOrigins);
   cb(null, {
-    origin: allowedOrigins,
+    origin: 'https://ivn.us',
     methods: ['OPTIONS', 'POST'],
     allowedHeaders: ['Content-Type'],
     optionsSuccessStatus: 200,
