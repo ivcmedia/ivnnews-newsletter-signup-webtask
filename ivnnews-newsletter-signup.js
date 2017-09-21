@@ -28,21 +28,22 @@ module.exports = function(context, req, res) {
         status: 'subscribed',
       });    
     }, function(err) {
-      res.writeHead(400, {
-        'Content-Type': 'application/json',
-      });
-      res.end(err);
+      console.log(`parseFormdata error: ${err}`);
+      return Promise.reject({status: 400, message: err.message || 'unknown error'});
     })
     .then(function(res) {
       console.log('success!');
       res.writeHead(200);
       res.end();
+    }, function(err) {
+      console.log(`mailchimp api call error: ${err}`);
+      return Promise.reject({status: err.status || 500, message: err.message});
     })
     .catch(function(error) {
       res.writeHead(error.status, {
         'Content-Type': 'application/json',
       });
-      var json = JSON.stringify({type: error.type, title: error.title, detail: error.detail, instance: error.instance});
+      var json = JSON.stringify(error.message);
       res.end(json);
     });
 };
