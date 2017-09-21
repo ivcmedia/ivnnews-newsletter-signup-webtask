@@ -13,7 +13,7 @@ app.post('/', function (req, res, next) {
     error.status = 400;
     return next(error);
   }
-  if (req.body.terms !== false) {
+  if (req.body.terms !== 'false') {
     console.log('got spam submission with body ', req.body);
     res.status(200).end();
     return;
