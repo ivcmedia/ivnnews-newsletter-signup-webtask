@@ -8,6 +8,7 @@ app.use(bodyParser.urlencoded({
   extended: true,
 }));
 app.get('/', function (req, res, next) {
+  console.log(req.body);
   if (req.body.email_address == null) {
     var error = new Error('body must have an email_address field');
     error.status = 400;
