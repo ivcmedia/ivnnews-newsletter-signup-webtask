@@ -6,6 +6,7 @@ function parseFormdata(req) {
   return new Promise(function(resolve, reject) {
     parseFormdata_(req, function(err, data) {
       if (err != null) {
+        err.status = 400;
         return reject(err);
       }
       return resolve(data);
@@ -26,6 +27,11 @@ module.exports = function(context, req, res) {
         email_address: context.body.email_address,
         status: 'subscribed',
       });    
+    }, function(err) {
+      res.writeHead(400, {
+        'Content-Type': 'application/json',
+      });
+      res.end(err);
     })
     .then(function(res) {
       console.log('success!');
