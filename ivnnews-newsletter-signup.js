@@ -9,10 +9,14 @@ app.use(bodyParser.urlencoded({
 }));
 app.post('/', function (req, res, next) {
   if (req.body.email_address == null) {
-    console.log('got request body %o', req.body);
     var error = new Error('body must have an email_address field');
     error.status = 400;
     return next(error);
+  }
+  if (req.body.terms !== false) {
+    console.log('got spam submission with body ', req.body);
+    res.status(200).end();
+    return;
   }
   var emailAddress = req.body.email_address;
   var secrets = req.webtaskContext.secrets;
