@@ -6,7 +6,7 @@ var cors       = require('cors');
 
 var app = express();
 app.use(cors(function(req, cb) {
-  let allowedOrigins = req.webtaskContext.meta.corsAllowedOrigins.split(',');
+  var allowedOrigins = req.webtaskContext.meta.corsAllowedOrigins.split(',');
   console.log('found allowed origins: ', allowedOrigins);
   cb(null, {
     origin: allowedOrigins,
