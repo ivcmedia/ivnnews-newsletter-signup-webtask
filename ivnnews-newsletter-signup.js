@@ -3,8 +3,10 @@ var express    = require('express');
 var Webtask    = require('webtask-tools');
 var bodyParser = require('body-parser');
 var cors       = require('cors');
+var morgan     = require('morgan');
 
 var app = express();
+app.use(morgan('combined'));
 app.use(cors(function(req, cb) {
   var allowedOrigins = (req.webtaskContext.meta.corsAllowedOrigins || '*').split(',');
   console.log('found allowed origins: ', allowedOrigins);
