@@ -29,6 +29,9 @@ app.post('/', function (req, res, next) {
     status: 'subscribed',
   }).catch(function(err) {
     console.error('mailchimp api call error: %o', err);
+    if (err.status === 400) {
+      return Promise.resolve();
+    }
     return Promise.reject(err);
   })
   .then(function() {
