@@ -9,7 +9,9 @@ app.use(cors(function(req, cb) {
   var allowedOrigins = req.webtaskContext.meta.corsAllowedOrigins.split(',');
   console.log('found allowed origins: ', allowedOrigins);
   cb(null, {
-    origin: allowedOrigins,
+    origin: function(origin, originCb) {
+      originCb(null, allowedOrigins.indexOf(origin) >= 0);
+    },
     methods: ['POST'],
     allowedHeaders: ['Content-Type'],
     optionsSuccessStatus: 200,
