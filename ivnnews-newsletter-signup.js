@@ -27,6 +27,9 @@ app.post('/', function (req, res, next) {
   return mailchimp.post(`/lists/${meta.mailchimpListId}/members`, {
     email_address: emailAddress,
     status: 'subscribed',
+    interests: {
+      [meta.mailchimpInterestId]: true,
+    },
   }).catch(function(err) {
     console.error('mailchimp api call error: %o', err);
     if (err.status === 400) {
