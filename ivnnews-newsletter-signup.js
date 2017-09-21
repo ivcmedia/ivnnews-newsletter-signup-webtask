@@ -20,7 +20,7 @@ app.post('/', function (req, res, next) {
   var path = `/lists/${meta.mailchimpListId}/members`;
   console.info(`making POST request to ${path}`);
   return mailchimp.post(`/lists/${meta.mailchimpListId}/members`, {
-    email_address: email_address,
+    email_address: emailAddress,
     status: 'subscribed',
   }).catch(function(err) {
     console.error('mailchimp api call error: %o', err);
