@@ -27,13 +27,9 @@ app.get('/', function (req, res, next) {
   .then(function(res) {
       console.log('success!');
       res.status(200).end();
-    })
-  .catch(function(error) {
-    var json = JSON.stringify({
-      status: error.status,
-      message: error.message,
-    });
-    res.send(json);
+  })
+  .catch(function(err) {
+    next(err);
   });
 });
 app.use(function(err, req, res, next) {
