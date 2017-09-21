@@ -38,7 +38,8 @@ app.use(function(err, req, res, next) {
   console.error(err.stack);
   var status = err.status || 500;
   res.status(status);
-  res.send({status: status, error: err.message});
+  var message = status === 500 ? 'Interal error' : err.message;
+  res.send({status: status, error: message});
 });
 
 module.exports = Webtask.fromExpress(app);
