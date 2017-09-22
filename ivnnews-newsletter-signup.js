@@ -9,7 +9,12 @@ var corsOptions = function(req, cb) {
   var allowedOrigin = req.webtaskContext.meta.corsAllowedOrigins || '*';
   console.log('found allowed origin: ', allowedOrigin);
   cb(null, {
-    origin: allowedOrigin,
+    origin: function(origin, originCb) {
+      if (allowedOrigin === origin) {
+        return originCb(null, true);
+      }
+      originCb(new Error('origin not allowed'));
+    },
     methods: ['OPTIONS', 'POST'],
     allowedHeaders: ['Content-Type'],
     optionsSuccessStatus: 200,
