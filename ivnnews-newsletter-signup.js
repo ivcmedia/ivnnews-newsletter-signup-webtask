@@ -13,7 +13,7 @@ var corsOptions = function(req, cb) {
       if (allowedOrigin === origin) {
         return originCb(null, true);
       }
-      originCb(new Error('origin not allowed'));
+      originCb(new Error('origin not allowed'), false);
     },
     methods: ['OPTIONS', 'POST'],
     allowedHeaders: ['Content-Type'],
