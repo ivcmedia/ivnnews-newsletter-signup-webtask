@@ -22,7 +22,6 @@ app.use(cors(corsOptions));
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
-app.options('/', cors(corsOptions));
 app.post('/', function (req, res, next) {
   if (req.body.email_address == null) {
     var error = new Error('body must have an email_address field');
