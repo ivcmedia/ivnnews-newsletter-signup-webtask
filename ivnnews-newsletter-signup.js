@@ -6,10 +6,10 @@ var cors       = require('cors');
 var morgan     = require('morgan');
 
 var corsOptions = function(req, cb) {
-  var allowedOrigins = (req.webtaskContext.meta.corsAllowedOrigins || '*').split(',');
-  console.log('found allowed origins: ', allowedOrigins);
+  var allowedOrigin = req.webtaskContext.meta.corsAllowedOrigins || '*';
+  console.log('found allowed origin: ', allowedOrigin);
   cb(null, {
-    origin: allowedOrigins,
+    origin: allowedOrigin,
     methods: ['OPTIONS', 'POST'],
     allowedHeaders: ['Content-Type'],
     optionsSuccessStatus: 200,
