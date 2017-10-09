@@ -4,6 +4,8 @@ var Webtask = require('webtask-tools');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var morgan = require('morgan');
+var RateLimit = require('express-rate-limit');
+var moment = require('moment');
 
 var corsOptions = function(req, cb) {
   var allowedOrigin = req.webtaskContext.meta.corsAllowedOrigins || '*';
@@ -21,9 +23,67 @@ var corsOptions = function(req, cb) {
   });
 };
 
+var RateLimitStore = (function() {
+  function RateLimitStore(windowMs, storage) {
+    this.windowMs = windowMs;
+    this.storage = storage;
+  }
+
+  RateLimitStore.prototype.incr = function(key, cb) {
+    var windowMs = this.windowMs;
+    var storage = this.storage;
+    storage.get(function(error, data) {
+      if (error) {
+        return cb(error);
+      }
+
+      data['rateLimit'] = data['rateLimit'] || {};
+      var entry = data['rateLimit'][key] || { c: 0, d: moment() };
+      // Reset the count if the entry is older than windowMs.
+      if (moment().diff(entry.d) > windowMs) {
+        entry.c = 0;
+      }
+      entry.c = count + 1;
+      entry.d = moment();
+      data['rateLimit'][key] = entry;
+      storage.set(data, function(error) {
+        if (error) {
+          return cb(error);
+        }
+      });
+      cb(null, entry.c);
+    });
+  };
+
+  RateLimitStore.prototype.resetKey = function(key, cb) {
+    this.storage.get(function(error, data) {
+      if (error) {
+        return cb(error);
+      }
+
+      data['rateLimit'] = data['rateLimit'] || {};
+      delete data['rateLimit'][key];
+      cb(null);
+    });
+  };
+
+  return RateLimitStore;
+})();
+
+var rateLimiter = function(req, res, next) {
+  let windowMs = 60 * 60 * 1000; // 1 hour,
+  var limiter = new RateLimit({
+    windowMs,
+    max: 5,
+    store: new RateLimitStore(windowMs, req.webtaskContext.storage),
+  });
+  return limiter(req, res, next);
+};
+
 var app = express();
 app.use(morgan('combined'));
 app.use(cors(corsOptions));
+app.use(rateLimiter);
 app.use(
   bodyParser.urlencoded({
     extended: true,
