@@ -45,8 +45,7 @@ app.post('/', function(req, res, next) {
     if (typeof req.body.mailchimp_group_ids !== 'string') {
       console.error('got malformed mailchimp_group_ids field: ', req.body.mailchimp_group_ids);
     } else {
-      groupIds = req.body.mailchimp_group_ids.split(',')
-        .map(function(gid) { return parseInt(gid, 10); });
+      groupIds = req.body.mailchimp_group_ids.split(',');
     }
   }
   var emailAddress = req.body.email_address;
