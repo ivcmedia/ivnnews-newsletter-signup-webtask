@@ -40,12 +40,12 @@ app.post('/', function(req, res, next) {
     res.status(200).end();
     return;
   }
-  var groupIds = [];
-  if (req.body.mailchimp_group_ids !== null) {
-    if (typeof req.body.mailchimp_group_ids !== 'string') {
-      console.error('got malformed mailchimp_group_ids field: ', req.body.mailchimp_group_ids);
+  var interestIds = [];
+  if (req.body.mailchimp_interest_ids !== null) {
+    if (typeof req.body.mailchimp_interest_ids !== 'string') {
+      console.error('got malformed mailchimp_group_ids field: ', req.body.mailchimp_interest_ids);
     } else {
-      groupIds = req.body.mailchimp_group_ids.split(',');
+      interestIds = req.body.mailchimp_interest_ids.split(',');
     }
   }
   var emailAddress = req.body.email_address;
@@ -62,8 +62,8 @@ app.post('/', function(req, res, next) {
         {
           [meta.mailchimpInterestId]: true,
         },
-        groupIds.reduce(function(acc, gid) {
-          acc[gid] = true;
+        interestIds.reduce(function(acc, iid) {
+          acc[iid] = true;
           return acc;
         }, {})
       )
