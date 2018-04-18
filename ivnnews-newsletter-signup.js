@@ -10,6 +10,7 @@ var corsOptions = function(req, cb) {
   console.log('found allowed origin: ', allowedOrigin);
   cb(null, {
     origin: function(origin, originCb) {
+      console.log('request has origin: ', origin);
       if (allowedOrigin === '*' || allowedOrigin === origin) {
         return originCb(null, true);
       }
