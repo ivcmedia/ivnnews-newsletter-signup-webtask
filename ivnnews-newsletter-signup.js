@@ -30,7 +30,7 @@ app.use(
   })
 );
 app.post('/', function(req, res, next) {
-  if (req.body.email_address == null) {
+  if (req.body.email_address === null) {
     var error = new Error('body must have an email_address field');
     error.status = 400;
     return next(error);
@@ -39,6 +39,14 @@ app.post('/', function(req, res, next) {
     console.log('got spam submission with body ', req.body);
     res.status(200).end();
     return;
+  }
+  var groupIds = [];
+  if (req.body.mailchimp_group_ids !== null) {
+    if (typeof req.body.mailchimp_group_ids !== 'string') {
+      console.log('got malformed mailchimp_group_ids field: ', req.body.mailchimp_group_ids);
+    } else {
+      groupIds = req.body.mailchimp_group_ids.split(',');
+    }
   }
   var emailAddress = req.body.email_address;
   var secrets = req.webtaskContext.secrets;
@@ -50,9 +58,15 @@ app.post('/', function(req, res, next) {
     .post(`/lists/${meta.mailchimpListId}/members`, {
       email_address: emailAddress,
       status: 'subscribed',
-      interests: {
-        [meta.mailchimpInterestId]: true,
-      },
+      interests: Object.assign({},
+        {
+          [meta.mailchimpInterestId]: true,
+        },
+        groupIds.reduce(function(acc, gid) {
+          acc[gid] = true;
+          return acc;
+        }, {})
+      )
     })
     .catch(function(err) {
       console.error('mailchimp api call error: %o', err);
