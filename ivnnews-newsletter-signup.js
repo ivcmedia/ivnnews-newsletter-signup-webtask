@@ -6,12 +6,12 @@ var cors = require('cors');
 var morgan = require('morgan');
 
 var corsOptions = function(req, cb) {
-  var allowedOrigin = req.webtaskContext.meta.corsAllowedOrigins || '*';
-  console.log('found allowed origin: ', allowedOrigin);
+  var allowedOrigins = req.webtaskContext.meta.corsAllowedOrigins.split(',') || '*';
+  console.log('found allowed origins: ', allowedOrigins);
   cb(null, {
     origin: function(origin, originCb) {
       console.log('request has origin: ', origin);
-      if (allowedOrigin === '*' || allowedOrigin === origin) {
+      if (allowedOrigin === '*' || allowedOrigins.includes(origin)) {
         return originCb(null, true);
       }
       originCb(new Error('origin not allowed'), false);
