@@ -43,7 +43,7 @@ app.post('/', function(req, res, next) {
   var groupIds = [];
   if (req.body.mailchimp_group_ids !== null) {
     if (typeof req.body.mailchimp_group_ids !== 'string') {
-      console.log('got malformed mailchimp_group_ids field: ', req.body.mailchimp_group_ids);
+      console.error('got malformed mailchimp_group_ids field: ', req.body.mailchimp_group_ids);
     } else {
       groupIds = req.body.mailchimp_group_ids.split(',');
     }
