@@ -54,6 +54,7 @@ app.post('/', function(req, res, next) {
     interestIds = [];
   }
   // Let requests specify their interest IDs
+  console.log(`mailchimp_interest_ids: ${req.body.mailchimp_interest_ids}`)
   if (req.body.mailchimp_interest_ids !== null) {
     interestIds = req.body.mailchimp_interest_ids.split(',');
   }
