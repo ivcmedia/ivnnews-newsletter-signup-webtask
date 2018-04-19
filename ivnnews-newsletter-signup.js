@@ -32,7 +32,7 @@ app.use(
   })
 );
 app.post('/', function(req, res, next) {
-  if (req.body.email_address === null) {
+  if (req.body.email_address == null) {
     var error = new Error('body must have an email_address field');
     error.status = 400;
     return next(error);
@@ -47,15 +47,14 @@ app.post('/', function(req, res, next) {
   var listId = meta.mailchimpListId;
   var interestIds = [meta.mailchimpInterestId];
   // Let requests override the default mailchimp list ID.
-  if (req.body.mailchimp_list_id !== null) {
+  if (req.body.mailchimp_list_id != null) {
     listId = req.body.mailchimp_list_id;
     // The default interest IDs won't work if the request
     // overrode the list ID, so unset it.
     interestIds = [];
   }
   // Let requests specify their interest IDs
-  console.log(`mailchimp_interest_ids: ${req.body.mailchimp_interest_ids}`)
-  if (req.body.mailchimp_interest_ids !== null) {
+  if (req.body.mailchimp_interest_ids != null) {
     interestIds = req.body.mailchimp_interest_ids.split(',');
   }
   var emailAddress = req.body.email_address;
