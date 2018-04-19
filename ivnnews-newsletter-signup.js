@@ -4,6 +4,7 @@ var Webtask = require('webtask-tools');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var morgan = require('morgan');
+var md5 = require('md5');
 
 var corsOptions = function(req, cb) {
   var allowedOrigins = req.webtaskContext.meta.corsAllowedOrigins.split(',') || '*';
@@ -57,12 +58,13 @@ app.post('/', function(req, res, next) {
     interestIds = req.body.mailchimp_interest_ids.split(',');
   }
   var emailAddress = req.body.email_address;
+  var subscriberHash = md5(emailAddress);
   var secrets = req.webtaskContext.secrets;
   var mailchimp = new Mailchimp(secrets.mailchimpApiKey);
   var endpoint = `/lists/${listId}/members`;
-  console.info(`making POST request to ${endpoint}`);
+  console.info(`making PUT request to ${endpoint}`);
   return mailchimp
-    .post(endpoint, {
+    .put(`endpoint/${subscriberHash}`, {
       email_address: emailAddress,
       status: 'subscribed',
       interests: interestIds.reduce(function(acc, iid) {
