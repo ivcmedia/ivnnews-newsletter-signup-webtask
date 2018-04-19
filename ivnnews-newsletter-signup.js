@@ -41,33 +41,34 @@ app.post('/', function(req, res, next) {
     res.status(200).end();
     return;
   }
-  var interestIds = [];
+  var meta = req.webtaskContext.meta;
+  // Set some sane defaults.
+  var listId = meta.mailchimpListId;
+  var interestIds = [meta.mailchimpInterestId];
+  // Let requests override the default mailchimp list ID.
+  if (req.body.mailchimp_list_id === null) {
+    listId = req.body.mailchimp_list_id;
+    // The default interest IDs won't work if the request
+    // overrode the list ID, so unset it.
+    interestIds = [];
+  }
+  // Let requests specify their interest IDs
   if (req.body.mailchimp_interest_ids !== null) {
-    if (typeof req.body.mailchimp_interest_ids !== 'string') {
-      console.error('got malformed mailchimp_group_ids field: ', req.body.mailchimp_interest_ids);
-    } else {
-      interestIds = req.body.mailchimp_interest_ids.split(',');
-    }
+    interestIds = req.body.mailchimp_interest_ids.split(',');
   }
   var emailAddress = req.body.email_address;
   var secrets = req.webtaskContext.secrets;
-  var meta = req.webtaskContext.meta;
   var mailchimp = new Mailchimp(secrets.mailchimpApiKey);
-  var path = `/lists/${meta.mailchimpListId}/members`;
-  console.info(`making POST request to ${path}`);
+  var endpoint = `/lists/${listId}/members`;
+  console.info(`making POST request to ${endpoint}`);
   return mailchimp
-    .post(`/lists/${meta.mailchimpListId}/members`, {
+    .post(endpoint, {
       email_address: emailAddress,
       status: 'subscribed',
-      interests: Object.assign({},
-        {
-          [meta.mailchimpInterestId]: true,
-        },
-        interestIds.reduce(function(acc, iid) {
-          acc[iid] = true;
-          return acc;
-        }, {})
-      )
+      interests: interestIds.reduce(function(acc, iid) {
+        acc[iid] = true;
+        return acc;
+      }, {})
     })
     .catch(function(err) {
       console.error('mailchimp api call error: %o', err);
