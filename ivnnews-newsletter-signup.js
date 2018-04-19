@@ -47,7 +47,7 @@ app.post('/', function(req, res, next) {
   var listId = meta.mailchimpListId;
   var interestIds = [meta.mailchimpInterestId];
   // Let requests override the default mailchimp list ID.
-  if (req.body.mailchimp_list_id === null) {
+  if (req.body.mailchimp_list_id !== null) {
     listId = req.body.mailchimp_list_id;
     // The default interest IDs won't work if the request
     // overrode the list ID, so unset it.
