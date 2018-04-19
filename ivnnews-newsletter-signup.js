@@ -64,7 +64,7 @@ app.post('/', function(req, res, next) {
   var endpoint = `/lists/${listId}/members`;
   console.info(`making PUT request to ${endpoint}`);
   return mailchimp
-    .put(`endpoint/${subscriberHash}`, {
+    .put(`${endpoint}/${subscriberHash}`, {
       email_address: emailAddress,
       status: 'subscribed',
       interests: interestIds.reduce(function(acc, iid) {
